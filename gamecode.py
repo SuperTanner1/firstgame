@@ -1,8 +1,9 @@
 import random
 import json
 import pprint
+import sys
 data = "data.json"
-games = ["guess_the_number"]
+games = ["guess_the_number", "tic_tac_toe"]
 
 
 def displayMenu():
@@ -10,6 +11,8 @@ def displayMenu():
     print("""
 1. Play Guess the Number
 2. Leaderboard
+3. Log out (WIP)
+4. Quit
 """)
 def displayLeaderboard():
     print("Leaderboard".center(50, "="))
@@ -31,14 +34,14 @@ def login():
         while True:
             bool = input("Do you want to create an account? Enter yes or no\n")
             # Creating account
-            if bool.lower() == "yes":
-                data_content[username] = {"password": password, games[0]: 0}
+            if bool.lower() == "yes": # Makes "bool" lowercase so the player can say any case when saying yes or no (reduces errors)
+                data_content[username] = {"password": password, games[0]:0, games[1]: 0} # Creates username and adds a dictionary which assigns the password and places the scores of the games and assigns them as 0
                 with open(data, "w") as f:
-                    json.dump(data_content, f, indent=2)
-                return username # Uses this answer to exit or continue with the game
+                    json.dump(data_content, f, indent=2) # Writes over the data.json file then puts the rest of the file back and adds an indent for easier reading
+                return username # Uses this to exit or continue with the game
                 break
             # Player decided not to play by not creating account
-            elif bool.lower() == "no":
+            elif bool.lower() == "no": # Makes "bool" lowercase so the player can say any case when saying yes or no (reduces errors)
                 choice = input("Are you sure? If you don't create an account you can't play.\n")
                 if choice.lower() == "yes":
                     print("Rip\n")
@@ -46,9 +49,9 @@ def login():
                     break
                 # Creating account
                 elif choice.lower() == "no":
-                    data_content[username]["password"] = password
+                    data_content[username] = {"password": password, games[0]:0, games[1]: 0}
                     with open(data, "w") as f:
-                        json.dump(data_content, f, indent=2)
+                        json.dump(data_content, f, indent=2) #
                     return username # Uses this answer to exit or continue with the game
                     break
             else:
@@ -67,13 +70,14 @@ def data_write(name, score, game):
         data_content[name][game] = player_score
         with open(data, "w") as f:
             json.dump(data_content, f, indent=4) # writes over previous score
+        return player_score
 
 def data_read(name, score, game):
     with open(data, "r") as f:
         data_content = json.load(f)
 
         player_score = data_content[name][game]
-        player_score = player_score + score
+        player_score += score
         return player_score
 
 def guess_the_number(name):
@@ -95,13 +99,14 @@ def guess_the_number(name):
                 break
         if guess == correct_number:
             print(f"Congrats, you got the right answer {name}, you took {guesses} guesses.\n")
-            data_write(name, score, game)
-            print(f"Your score is: " + str(data_read(name, score, game)))
+            new_score = data_write(name, score, game)
+            print(f"Your score is: " + str(new_score))
             break
         else:
+            new_score = data_read(name, score, game) - 1
             score = 0
             print(f"You got it wrong {name} lmao, you took {guesses} guesses.\n")
-            print("Your score is: " + str(data_read(name, score, game)))
+            print("Your score is: " + str(new_score))
             break
 
 
@@ -122,5 +127,10 @@ while True:
         if choice == "2":
             print(displayLeaderboard() + "\n")
             input("Press Enter to continue:")
-
+        if choice == "3":
+            print("WIP, try again later")
+            continue
+        if choice == "4":
+            print("Goodbye")
+            sys.exit()
 
