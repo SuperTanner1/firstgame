@@ -3,7 +3,7 @@ import json
 import pprint
 import os
 cwd = os.getcwd()
-data = f"{cwd}\\Code Projects\\data.json"
+data = "data.json"
 games = ["guess_the_number"]
 
 
