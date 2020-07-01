@@ -1,8 +1,6 @@
 import random
 import json
 import pprint
-import os
-cwd = os.getcwd()
 data = "data.json"
 games = ["guess_the_number"]
 
