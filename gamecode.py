@@ -127,6 +127,7 @@ while True:
         if choice == "2":
             print(displayLeaderboard() + "\n")
             input("Press Enter to continue:")
+            continue
         if choice == "3":
             print("WIP, try again later")
             continue
